@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+           <title>H20 just add water</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        
+
+     </head>
+     <body>
+        <header>
+            <nav class="navbar">
+                <div class="logo">
+                    <img class="logo-picture" src="{% static 'images/logo.png' %}" alt="logo">
+                </div>
+                <div class="slogan">
+                    <h2>Rent an equpiment and start a new adventrue</h2>
+                </div>
+                <div class="logo">
+                    <img class="logo-picture" src="{% static 'images/logo.png' %}" alt="logo">
+                </div>
+            </nav>
+            <div class="nav-links-container">
+                <ul class="nav-links">
+                    <li><a href="{% url 'store' %}">Store</a></li>
+                    <li><a href="{% url 'reservations' %}">Reservations</a></li>
+                </ul>
+                <ul class="nav-links right">
+                    <li>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'my_account' %}">My account</a>
+                        {% else %}
+                            <a href="{% url 'login' %}">Login</a>
+                        {% endif %}
+                    </li>
+                    <li>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'logout' %}">Logout</a>
+                        {% else %}
+                            <a href="{% url 'login' %}">Login</a>
+                        {% endif %}
+                    </li>
+                </ul>
+                
+            </div>
+            
+           
+            
+        </header>
+            {% block content %}
+            {% endblock content %}
+     </body>
+</html>

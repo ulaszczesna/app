@@ -1,0 +1,46 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="store-container">
+    
+    <form method="get" action="" class="search">
+        <div class="search-container">
+           
+            <input type="text" name="query" placeholder="Search by name" value="{{ query }}">
+            <input type="number" name="min_price" placeholder="Min price" value="{{ min_price }}">
+            <input type="number" name="max_price" placeholder="Max price" value="{{ max_price }}">
+        </div>
+        <div class="button-container">
+            <button class="search-btn" type="submit">Search</button>
+            <a href="{% url 'store' %}" class="reset-btn">Reset</a>
+        </div>
+    </form>
+    <div class="welcome-msg">
+        {% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}!</p>
+{% else %}
+    <p>Welcome to our store!</p>
+{% endif %}
+        </div>
+    
+    
+    
+
+    <div class="equipment-list">
+        {% for equipment in equipment %}
+            <div class="equipment-item">
+                <img src="{% static equipment.image.url %}" alt="{{ equipment.name }}">
+                <h3>{{ equipment.name }}</h3>
+                <p>Price: {{ equipment.price_per_day|floatformat:0 }} PLN per day</p>
+                <p>{{ equipment.description }}</p>
+
+                <!-- Button to reserve the equipment -->
+                <a href="{% url 'reserve' equipment.id %}" class="btn btn-primary">
+                    Reserve
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

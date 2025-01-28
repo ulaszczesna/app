@@ -1,0 +1,95 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="reservations-summary">
+        <h3>Reservations Summary</h3>
+        <p>You have <strong>{{ unpaid_count }}</strong> unpaid reservations.</p>
+        <div class="export-buttons">
+            <a href="?export=json" class="export-btn">Export to JSON</a>
+            <a href="?export=xml" class="export-btn">Export to XML</a>
+        </div>
+    </div>
+    <div class="reservations-container">
+        <h2>My Reservations</h2>
+    
+        {% if reservations %}
+            <!-- Tabela dla aktywnych rezerwacji -->
+            <h3>Active Reservations</h3>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        {% if reservation.status != 'Returned' %}
+                            <tr>
+                                <td>{{ reservation.equipment.name }}</td>
+                                <td>{{ reservation.start_date }}</td>
+                                <td>{{ reservation.end_date }}</td>
+                                <td>{{ reservation.total_price|floatformat:0 }} PLN</td>
+                                <td>
+                                    {% if reservation.status == 'Pending' %}
+                                        <span style="color: orange;">Pending</span>
+                                    {% else %}
+                                        <span style="color: green;">Paid</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if reservation.status == 'Pending' and not reservation.paid %}
+                                        <a href="{% url 'payment' reservation.id %}">
+                                            <button type="button" class="pay-btn">Pay Now</button>
+                                        </a>
+                                    {% endif %}
+                                    <form method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+                                        <input type="hidden" name="action" value="return">
+                                        <button type="submit" class="return-btn">Return</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+    
+            <!-- Tabela dla zwróconych rezerwacji -->
+            <h3>Returned Reservations</h3>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Rental Date</th>
+                        <th>Return Date</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%  for rental in rental_history %}
+                        {% if rental.return_date %}
+                            <tr>
+                                <td>{{ rental.equipment.name }}</td>
+                                <td>{{ rental.rental_date }}</td>
+                                <td>{{ rental.return_date }}</td>
+                                <td>{{ rental.total_price|floatformat:0 }} PLN</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have no reservations.</p>
+        {% endif %}
+    </div>
+
+    
+{% endblock %}

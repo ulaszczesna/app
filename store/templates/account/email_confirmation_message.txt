@@ -1,0 +1,8 @@
+Hello {{ user.username }},
+
+Please confirm your email address by clicking the link below:
+
+{{ activate_url }}
+
+Thank you,
+H20 just add water

@@ -1,0 +1,27 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="account-container">
+        <h2>My Account</h2>
+
+        <p>Email: {{ user.email }}</p>
+        <p>Username: {{ user.username }}</p>
+
+        <h3>Change Password</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <button type="submit">Change Password</button>
+        </form>
+
+        <div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

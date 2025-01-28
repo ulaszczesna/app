@@ -1,0 +1,68 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="reservation-container">
+        <h2>Reserve Equipment</h2>
+        <div class="equipment-details">
+            <img src="{{ equipment.image.url }}" alt="{{ equipment.name }}" class="equipment-image">
+            <p><strong>Equipment:</strong> {{ equipment.name }}</p>
+            <p><strong>Price per day:</strong> {{ equipment.price_per_day|floatformat:0 }} PLN</p>
+        </div>
+
+    
+
+        <form method="POST" class="reservation-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="date-field">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                </div>
+                <div class="date-field">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                </div>
+            </div>
+
+            <div class="total-price">
+                <p><strong>Total Price:</strong> <span id="total-price">0</span> PLN</p>
+            </div>
+        
+            <button type="submit" class="search-btn">Confirm Reservation</button>
+        </form>
+
+        
+        
+    </div>
+
+    
+
+    <script>
+        const pricePerDay = {{ equipment.price_per_day }};
+        
+        // Funkcja do obliczania ceny
+        function calculateTotalPrice() {
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (end >= start) {
+                    const timeDifference = end - start;
+                    const days = timeDifference / (1000 * 3600 * 24); // Oblicz liczbę dni
+                    const totalPrice = days * pricePerDay;
+                    document.getElementById('total-price').textContent = totalPrice.toFixed(0);
+                }
+            }
+        }
+
+        // Nasłuchiwanie na zmiany dat
+        document.getElementById('start_date').addEventListener('change', calculateTotalPrice);
+        document.getElementById('end_date').addEventListener('change', calculateTotalPrice);
+
+      
+    </script>
+{% endblock %}

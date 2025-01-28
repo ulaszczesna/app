@@ -1,0 +1,55 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="reservation-container">
+        <h2>Payment Details</h2>
+        
+        <!-- Payment Summary Section -->
+        <div class="payment-summary">
+            <p><strong>Equipment:</strong> {{ reservation.equipment.name }}</p>
+            <p><strong>Start Date:</strong> {{ reservation.start_date }}</p>
+            <p><strong>End Date:</strong> {{ reservation.end_date }}</p>
+            <p><strong>Total Price:</strong> {{ reservation.total_price|floatformat:0 }} PLN</p>
+        </div>
+
+        <!-- Payment Form -->
+        <form method="POST" class="reservation-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name" id="first_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" id="last_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment_method">Payment Method</label>
+                <select name="payment_method" id="payment_method" required>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="bank_transfer">Bank Transfer</option>
+                </select>
+            </div>
+
+            <!-- Checkbox for accepting terms -->
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="accept_terms" id="accept_terms" required>
+                    I accept the <a href="/terms-and-conditions" target="_blank">terms and conditions</a>
+                </label>
+            </div>
+
+            <button type="submit" class="reserve-btn">Pay Now</button>
+        </form>
+    </div>
+{% endblock %}
